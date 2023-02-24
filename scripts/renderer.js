@@ -101,8 +101,8 @@ class Renderer {
             Vector3(400, 450, 1),
             Vector3(300, 300, 1)
         ];
-        let teal = [0, 128, 128, 255];
-        this.drawConvexPolygon(diamond, teal);
+        let red = [255, 0, 0, 255];
+        this.drawConvexPolygon(diamond, red);
     }
 
     //
