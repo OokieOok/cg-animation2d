@@ -12,6 +12,7 @@ class Renderer {
         this.fps = fps;
         this.start_time = null;
         this.prev_time = null;
+        this.theta = 0;
     }
 
     // flag:  bool
@@ -67,10 +68,9 @@ class Renderer {
     updateTransforms(time, delta_time) {
         // TODO: update any transformations needed for animation
         if (this.slide_idx == 1) {
-            this.theta = 360 * (delta_time);
+            this.theta = Math.round((this.theta + 180 * (delta_time/1000)) % 360);
             console.log(this.theta);
         }
-        
 
     }
     
@@ -121,12 +121,25 @@ class Renderer {
             Vector3(400, 450, 1),
             Vector3(300, 300, 1)
         ];
-        
+
+        let tran_origin = new Matrix(3, 3);
+        mat3x3Translate(tran_origin, -400, -300);
+        console.log(tran_origin)
+
         let rot_mat = new Matrix(3, 3);
-        rot_mat = mat3x3Rotate(rot_mat, this.theta);
+        mat3x3Rotate(rot_mat, this.theta);
+
+        let tran_back = new Matrix(3, 3);
+        mat3x3Translate(tran_back, 400, 300);
+        console.log(tran_back);
+
+        let final_mat = tran_back.mult(rot_mat);
+        final_mat = final_mat.mult(tran_origin);
+        console.log(final_mat);
+
 
         for (let i=0; i<diamond.length; i++) {
-            diamond[i] = rot_mat.mult(diamond[i]);
+            diamond[i] = final_mat.mult(diamond[i]);
         }
 
         this.drawConvexPolygon(diamond, [255,0,0,255]);
