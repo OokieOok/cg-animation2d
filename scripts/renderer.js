@@ -66,6 +66,9 @@ class Renderer {
     //
     updateTransforms(time, delta_time) {
         // TODO: update any transformations needed for animation
+        console.log(time,delta_time)
+        this.tx = 100 * time/1000
+        this.ty = 100 * time/1000
     }
     
     //
@@ -91,18 +94,40 @@ class Renderer {
     //
     drawSlide0() {
         // TODO: draw bouncing ball (circle that changes direction whenever it hits an edge)
-        
+        this.drawCircle(Vector3(400, 300, 1), 100, 50, [255, 0, 0, 255]);
         
         // Following line is example of drawing a single polygon
         // (this should be removed/edited after you implement the slide)
-        let diamond = [
+        /*let diamond = [
             Vector3(400, 150, 1),
             Vector3(500, 300, 1),
             Vector3(400, 450, 1),
             Vector3(300, 300, 1)
         ];
         let red = [255, 0, 0, 255];
-        this.drawConvexPolygon(diamond, red);
+        this.drawConvexPolygon(diamond, red);*/
+        let px = 0;
+        let py = 0;
+        /*let m = new Matrix(3, 3);
+        m = mat3x3Identity(m);
+        m = mat3x3Translate(m, tx, ty);
+        m = Matrix.multiply([m, ]);*/
+        if (Math.floor((this.tx+200)/600)%2 == 0) {
+            px = ((this.tx+200)%600)+100;
+        }
+        else {
+            px = 700-((this.tx+200)%600);
+        }
+        if (Math.floor((this.ty+250)/350)%2 == 0) {
+            py = ((this.tx+250)%350)+150;
+        }
+        else {
+            py = 500-((this.tx+250)%350);
+        }
+        //let px = ((x*(this.tx+200)+600)%500)+100;
+        //let py = ((y*(this.ty+250)+600)%450)+150;
+        let center = Vector3(px, py, 1);
+        this.drawCircle(center, 100, 50, [255, 0, 0, 255]);
     }
 
     //
@@ -143,6 +168,22 @@ class Renderer {
             x = vertex_list[i].values[0][0] / vertex_list[i].values[2][0];
             y = vertex_list[i].values[1][0] / vertex_list[i].values[2][0];
             this.ctx.lineTo(x, y);
+        }
+        this.ctx.closePath();
+        this.ctx.fill();
+    }
+    drawCircle(center, radius, num_edges, color) {
+        let c = 0.0;
+        this.ctx.fillStyle = 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + (color[3] / 255) + ')';
+        this.ctx.beginPath();
+        let px = center.values[0][0] + (radius * Math.cos(c));
+        let py = center.values[1][0] + (radius * Math.sin(c));
+        this.ctx.moveTo(px, py);
+        for(let i=0; i<num_edges; i++){
+            c += 360.0/num_edges;
+            px = center.values[0][0] + (radius * Math.cos(c));
+            py = center.values[1][0] + (radius * Math.sin(c));
+            this.ctx.lineTo(px, py);
         }
         this.ctx.closePath();
         this.ctx.fill();
