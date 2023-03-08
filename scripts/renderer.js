@@ -13,6 +13,8 @@ class Renderer {
         this.start_time = null;
         this.prev_time = null;
         this.theta = 0;
+        this.scalar = 0;
+        this.scale_scen = 1;
     }
 
     // flag:  bool
@@ -70,8 +72,26 @@ class Renderer {
         if (this.slide_idx == 1) {
             this.theta = Math.round((this.theta + 180 * (delta_time/1000)) % 360);
             console.log(this.theta);
-        }
+        } else if (this.slide_idx == 2) {
+            /*
+            if (this.scale_scen == 1) {
+                this.scalar = 1;
+                this.scale_scen = 2;
+            } else if (this.scale_scen == 2) {
+                this.scalar = 2;
+                this.scale_scen = 3;
+            } else if (this.scale_scen == 3) {
+                this.scalar = 1;
+                this.scale_scen = 4;
+            } else {
+                this.scalar = 0.5;
+                this.scale_scen = 1;
+            }
+            */
 
+            this.scalar = (this.scalar + 2 * (delta_time/1000)) % 2;
+
+        }
     }
     
     //
@@ -131,11 +151,9 @@ class Renderer {
 
         let tran_back = new Matrix(3, 3);
         mat3x3Translate(tran_back, 400, 300);
-        console.log(tran_back);
 
         let final_mat = tran_back.mult(rot_mat);
         final_mat = final_mat.mult(tran_origin);
-        console.log(final_mat);
 
 
         for (let i=0; i<diamond.length; i++) {
@@ -152,6 +170,30 @@ class Renderer {
         //   - have each polygon grow / shrink different sizes
         //   - try at least 1 polygon that grows / shrinks non-uniformly in the x and y directions
 
+        let diamond = [
+            Vector3(400, 150, 1),
+            Vector3(500, 300, 1),
+            Vector3(400, 450, 1),
+            Vector3(300, 300, 1)
+        ];
+
+        let tran_origin = new Matrix(3, 3);
+        mat3x3Translate(tran_origin, -400, -300);
+
+        let scale_mat = new Matrix(3, 3);
+        mat3x3Scale(scale_mat, this.scalar, this.scalar);
+
+        let tran_back = new Matrix(3, 3);
+        mat3x3Translate(tran_back, 400, 300);
+
+        let final_mat = tran_back.mult(scale_mat);
+        final_mat = final_mat.mult(tran_origin);
+
+        for (let i=0; i<diamond.length; i++) {
+            diamond[i] = final_mat.mult(diamond[i]);
+        }
+
+        this.drawConvexPolygon(diamond, [255,0,0,255]);
 
     }
 
