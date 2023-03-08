@@ -66,6 +66,12 @@ class Renderer {
     //
     updateTransforms(time, delta_time) {
         // TODO: update any transformations needed for animation
+        if (this.slide_idx == 1) {
+            this.theta = 360 * (delta_time);
+            console.log(this.theta);
+        }
+        
+
     }
     
     //
@@ -109,7 +115,21 @@ class Renderer {
     drawSlide1() {
         // TODO: draw at least 3 polygons that spin about their own centers
         //   - have each polygon spin at a different speed / direction
+        let diamond = [
+            Vector3(400, 150, 1),
+            Vector3(500, 300, 1),
+            Vector3(400, 450, 1),
+            Vector3(300, 300, 1)
+        ];
         
+        let rot_mat = new Matrix(3, 3);
+        rot_mat = mat3x3Rotate(rot_mat, this.theta);
+
+        for (let i=0; i<diamond.length; i++) {
+            diamond[i] = rot_mat.mult(diamond[i]);
+        }
+
+        this.drawConvexPolygon(diamond, [255,0,0,255]);
         
     }
 
