@@ -79,12 +79,13 @@ class Renderer {
         } else if (this.slide_idx == 2) {
             this.scalar1 = (this.scalar1 + 2 * (delta_time/1000)) % 2;
             this.scalar2x = (this.scalar2x - 1 * (delta_time/1000));
-            if (this.scalar2x <= 0 && this.scalar2y <= 0) {
+            if (this.scalar2x <= 0) {
                 this.scalar2x = 1;
-                this.scalar2y = 1;
             }
             this.scalar2y = (this.scalar2y - 1.5 * (delta_time/1000));
-            
+            if (this.scalar2y <= 0) {
+                this.scalar2y = 1;
+            }
         }
     }
     
