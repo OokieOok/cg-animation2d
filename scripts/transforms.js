@@ -18,12 +18,16 @@ function mat3x3Translate(mat3x3, tx, ty) {
 
 // Set values of existing 3x3 matrix to the scale matrix
 function mat3x3Scale(mat3x3, sx, sy) {
-    // mat3x3.values = ...;
+    mat3x3.values = [[sx, 0, 0],
+                     [0, sy, 0],
+                     [0, 0, 1]];
 }
 
 // Set values of existing 3x3 matrix to the rotate matrix
 function mat3x3Rotate(mat3x3, theta) {
-    // mat3x3.values = ...;
+    mat3x3.values = [[Math.cos(theta/180*Math.PI), -1*Math.sin((theta*Math.PI)/180), 0],
+                     [Math.sin((theta*Math.PI)/180), Math.cos((theta*Math.PI)/180), 0],
+                     [0, 0, 1]];
 }
 
 // Create a new 3-component vector with values x,y,w
