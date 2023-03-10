@@ -133,7 +133,7 @@ class Renderer {
     //
     drawSlide0() {
         // TODO: draw bouncing ball (circle that changes direction whenever it hits an edge)
-        this.drawCircle(Vector3(400, 300, 1), 100, 50, [255, 0, 0, 255]);
+        //this.drawCircle(Vector3(400, 300, 1), 100, 50, [255, 0, 0, 255]);
         
         // Following line is example of drawing a single polygon
         // (this should be removed/edited after you implement the slide)
