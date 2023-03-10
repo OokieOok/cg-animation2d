@@ -18,6 +18,9 @@ class Renderer {
         this.scalar1 = 0;
         this.scalar2x = 1;
         this.scalar2y = 1;
+        this.rotate = 0;
+        this.scalex = 1;
+        this.scaley = 1;
     }
 
     // flag:  bool
@@ -90,6 +93,18 @@ class Renderer {
             this.scalar2y = (this.scalar2y - 1.5 * (delta_time/1000));
             if (this.scalar2y <= 0) {
                 this.scalar2y = 1;
+            }
+        } else if (this.slide_idx == 3) {
+            this.translatex = 100 * time/1000;
+            this.translatey = 50 * time/1000;
+            this.rotate = Math.round((this.rotate + 300 * (delta_time/1000)) % 360);
+            this.scalex = (this.scalex - 1 * (delta_time/1000));
+            if (this.scalex <= 0) {
+                this.scalex = 1;
+            }
+            this.scaley = (this.scaley - 2 * (delta_time/1000));
+            if (this.scaley <= 0) {
+                this.scaley = 1;
             }
         }
 
@@ -287,7 +302,64 @@ class Renderer {
         // TODO: get creative!
         //   - animation should involve all three basic transformation types
         //     (translation, scaling, and rotation)
-        
+        let px = 0;
+        let py = 0;
+        if (Math.floor((this.translatex+200)/600)%2 == 0) {
+            px = ((this.translatex+200)%600)+100;
+        }
+        else {
+            px = 700-((this.translatex+200)%600);
+        }
+        if (Math.floor((this.translatey+250)/350)%2 == 0) {
+            py = ((this.translatey+250)%350)+150;
+        }
+        else {
+            py = 500-((this.translatey+250)%350);
+        }
+        let diamond = [
+            Vector3(px, py-50, 1),
+            Vector3(px+100, py, 1),
+            Vector3(px, py+50, 1),
+            Vector3(px-100, py, 1)
+        ];
+        //this.drawConvexPolygon(diamond, [255,0,0,255]);
+
+        let tran_origin1 = new Matrix(3, 3);
+        mat3x3Translate(tran_origin1, -px, -py);
+        console.log(tran_origin1)
+        let rot_mat1 = new Matrix(3, 3);
+        mat3x3Rotate(rot_mat1, this.rotate);
+        let tran_back1 = new Matrix(3, 3);
+        mat3x3Translate(tran_back1, px, py);
+        let final_mat1 = tran_back1.mult(rot_mat1);
+        final_mat1 = final_mat1.mult(tran_origin1);
+
+        for (let i=0; i<diamond.length; i++) {
+            diamond[i] = final_mat1.mult(diamond[i]);
+        }
+        //this.drawConvexPolygon(poly1, [0,255,0,255]);
+
+        let poly2 = [
+            Vector3(600, 50, 1),
+            Vector3(700, 300, 1),
+            Vector3(600, 550, 1),
+            Vector3(500, 300, 1)
+        ];
+
+        let tran_origin2 = new Matrix(3, 3);
+        mat3x3Translate(tran_origin2, -600, -300);
+        let scale_mat2 = new Matrix(3, 3);
+        mat3x3Scale(scale_mat2, this.scalex, this.scaley);
+        let tran_back2 = new Matrix(3, 3);
+        mat3x3Translate(tran_back2, 600, 300);
+        let final_mat2 = tran_back2.mult(scale_mat2);
+        final_mat2 = final_mat2.mult(tran_origin2);
+
+        for (let i=0; i<poly2.length; i++) {
+            poly2[i] = final_mat2.mult(poly2[i]);
+        }
+        this.drawConvexPolygon(diamond, [0,0,255,255]);
+        this.drawConvexPolygon(poly2, [0,255,0,255]);
         
     }
     
