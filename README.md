@@ -3,6 +3,11 @@ Starter code using the HTML5 Canvas API
 
 ---
 
+There are four simple animations on this website. The arrow buttons on the screen will cycle through the animations when clicked.
+Clicking the checkbox on the screen will limit the frame rate of the animations to 2-30 frames per second depending on what you set the slider to.
+
+---
+
 ## Matrix Class API
 Code includes file `matrix.js` used to create matrices
 
